@@ -37,18 +37,17 @@ module.exports = function createFramework(server) {
   const scenarios = [];
   const request = supertest(server);
 
-  function scenario(config) {
+  function addScenario(config) {
     scenarios.push(config);
   }
 
   function* run() {
-    const requests = yield scenarios.map(sc => convertScenarioToRequestPromise(request, sc));
-
-    scenarios.forEach((sc, i) => {
-      const res = requests[i];
-      runTestForScenario(sc, res);
-    });
+    for (let i = 0; i < scenarios.length; i += 1) {
+      const scenario = scenarios[i];
+      const response = yield convertScenarioToRequestPromise(request, scenario);
+      runTestForScenario(scenario, response);
+    }
   }
 
-  return { scenario, run };
+  return { scenario: addScenario, run };
 };
