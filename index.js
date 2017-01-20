@@ -29,7 +29,7 @@ function runTestForScenario(scenario, request) {
   test(scenario.label, function* expect(t) {
     const response = yield request;
     if (isGenerator(scenario.expect)) yield scenario.expect(t, response);
-    scenario.expect(t, response);
+    else scenario.expect(t, response);
     t.end();
   });
 }
