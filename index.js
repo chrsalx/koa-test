@@ -25,8 +25,9 @@ function convertScenarioToRequestPromise(request, scenario) {
     .send(payload);
 }
 
-function runTestForScenario(scenario, response) {
+function runTestForScenario(scenario, request) {
   test(scenario.label, function* expect(t) {
+    const response = yield request;
     if (isGenerator(scenario.expect)) yield scenario.expect(t, response);
     scenario.expect(t, response);
     t.end();
@@ -41,12 +42,12 @@ module.exports = function createFramework(server) {
     scenarios.push(config);
   }
 
-  function* run() {
-    for (let i = 0; i < scenarios.length; i += 1) {
-      const scenario = scenarios[i];
-      const response = yield convertScenarioToRequestPromise(request, scenario);
-      runTestForScenario(scenario, response);
-    }
+  function run() {
+    scenarios.forEach((scenario) => {
+      const req = convertScenarioToRequestPromise(request, scenario);
+      runTestForScenario(scenario, req);
+    });
+    return new Promise(resolve => test.onFinish(resolve));
   }
 
   return { scenario: addScenario, run };
