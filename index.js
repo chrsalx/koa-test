@@ -1,54 +1,35 @@
-const test = require('tape-async');
-const supertest = require('supertest');
+const tape = require('tape-async');
+const agent = require('supertest');
+const _ = require('underscore');
 
-function getMethod(request, method) {
-  const methods = {
-    get: request.get,
-    post: request.post,
-    patch: request.patch,
-    put: request.put,
-  };
-  return methods[method.toLowerCase()];
+
+function createTestSuite(apiFactory) {
+  return _.partial(addScenario, apiFactory);
 }
 
-function isGenerator(fn) {
-  return fn.constructor.name === 'GeneratorFunction';
-}
+function addScenario(apiFactory, config, dependencies) {
+  function* scenario(t) {
+    const path = config.path;
+    const httpMethod = config.method;
+    const headers = config.headers || {};
+    const query = config.query;
+    const body = config.body;
+    const assertions = config.assertions || [];
 
-function convertScenarioToRequestPromise(request, scenario) {
-  const method = getMethod(request, scenario.method);
-  const headers = scenario.headers || {};
-  const payload = scenario.payload || {};
+    const app = apiFactory(dependencies);
+    let request = agent(app)[httpMethod](path)
+      .query(query || {})
+      .send(body || {})
+      .set(headers);
 
-  return method(scenario.path)
-    .set(headers)
-    .send(payload);
-}
+    request = assertions.reduce((req, assertion) => req.expect(res => assertion(res, t)), request);
 
-function runTestForScenario(scenario, request) {
-  test(scenario.label, function* expect(t) {
-    const response = yield request;
-    if (isGenerator(scenario.expect)) yield scenario.expect(t, response);
-    else scenario.expect(t, response);
-    t.end();
-  });
-}
-
-module.exports = function createFramework(server) {
-  const scenarios = [];
-  const request = supertest(server);
-
-  function addScenario(config) {
-    scenarios.push(config);
-  }
-
-  function run() {
-    scenarios.forEach((scenario) => {
-      const req = convertScenarioToRequestPromise(request, scenario);
-      runTestForScenario(scenario, req);
+    request.end((err) => {
+      t.error(err, 'test produced no errors.');
     });
-    return new Promise(resolve => test.onFinish(resolve));
   }
 
-  return { scenario: addScenario, run };
-};
+  tape(config.title, scenario);
+}
+
+module.exports = createTestSuite;
