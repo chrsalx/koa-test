@@ -1,6 +1,5 @@
 const tape = require('tape-async');
 const agent = require('supertest');
-const co = require('co');
 const _ = require('underscore');
 
 
@@ -20,11 +19,9 @@ function addScenario(apiFactory, config, dependencies) {
     const app = apiFactory(dependencies);
     let request = agent(app)[httpMethod](path)
       .query(query || {})
-      .send(body || {});
+      .send(body || {})
+      .set(headers);
 
-    request = Object.keys(headers).reduce(
-      (req, header) => req.set(header, headers[header]), request
-    );
     request = assertions.reduce((req, assertion) => req.expect(res => assertion(res, t)), request);
 
     request.end((err) => {
