@@ -1,4 +1,4 @@
-const tape = require('blue-tape');
+const tape = require('tape-async');
 const agent = require('supertest');
 const co = require('co');
 const _ = require('underscore');
@@ -9,7 +9,7 @@ function createTestSuite(apiFactory) {
 }
 
 function addScenario(apiFactory, config, dependencies) {
-  function* bidsCount(t) {
+  function* scenario(t) {
     const path = config.path;
     const httpMethod = config.method;
     const headers = config.headers || {};
@@ -32,7 +32,7 @@ function addScenario(apiFactory, config, dependencies) {
     });
   }
 
-  tape(config.title, co.wrap(bidsCount));
+  tape(config.title, scenario);
 }
 
 module.exports = createTestSuite;
