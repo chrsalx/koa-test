@@ -1,5 +1,5 @@
 const tape = require('blue-tape');
-const agent = require('supertest-koa-agent');
+const agent = require('supertest');
 const co = require('co');
 const _ = require('underscore');
 

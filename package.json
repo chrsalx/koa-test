@@ -20,7 +20,6 @@
     "blue-tape": "^1.0.0",
     "co": "^4.6.0",
     "supertest": "^2.0.1",
-    "supertest-koa-agent": "^0.3.0",
     "tape-async": "^2.1.1",
     "underscore": "^1.8.3"
   },
