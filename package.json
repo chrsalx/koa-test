@@ -19,7 +19,7 @@
   "homepage": "https://github.com/chrsalx/koa-test#readme",
   "dependencies": {
     "supertest": "^2.0.1",
-    "tape-async": "^2.1.1",
+    "tape-async": "^2.1.1"
   },
   "devDependencies": {
     "eslint": "^3.13.1",
