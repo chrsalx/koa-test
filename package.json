@@ -1,6 +1,6 @@
 {
   "name": "koa-test",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "testing framework for koa using supertest and tape-async",
   "main": "index.js",
   "scripts": {
