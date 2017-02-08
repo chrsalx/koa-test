@@ -16,6 +16,15 @@
   "bugs": {
     "url": "https://github.com/chrsalx/koa-test/issues"
   },
+  "keywords": [
+    "dependency"
+    "injection",
+    "koa",
+    "test",
+    "unit",
+    "integration",
+    "testing"
+  ],
   "homepage": "https://github.com/chrsalx/koa-test#readme",
   "dependencies": {
     "supertest": "^2.0.1",
