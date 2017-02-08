@@ -17,7 +17,7 @@
     "url": "https://github.com/chrsalx/koa-test/issues"
   },
   "keywords": [
-    "dependency"
+    "dependency",
     "injection",
     "koa",
     "test",
