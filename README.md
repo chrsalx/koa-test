@@ -4,7 +4,7 @@ Easy to use framework for koa API testing built on `tape-async` and supertest. T
 
 ## Installation
 ```
-npm i -S koa-test
+npm i -D koa-test
 ```
 
 ## Usage
